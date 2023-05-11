@@ -1,6 +1,0 @@
-autopep8==2.0.2
-ez-setup==0.9
-psycopg2-binary==2.9.6
-pycodestyle==2.10.0
-python-dotenv==1.0.0
-tomli==2.0.1
