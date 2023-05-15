@@ -26,8 +26,7 @@ CREATE TABLE IF NOT EXISTS showtime(
     created_at timestamp(0) with time zone NOT NULL DEFAULT NOW(),
     movie_id integer NOT NULL REFERENCES movies(id) ON DELETE CASCADE,
     cinema_id integer NOT NULL REFERENCES cinemas(id) ON DELETE CASCADE,
-    movie_start_time timestamp(0) with time zone NOT NULL,
-    movie_end_time timestamp(0) with time zone NOT NULL
+    movie_start_time timestamp(0) with time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS seats (
