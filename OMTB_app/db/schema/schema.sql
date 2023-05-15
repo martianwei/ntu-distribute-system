@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS cinemas(
     title varchar(64) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS showtime(
+CREATE TABLE IF NOT EXISTS showtimes(
     id serial PRIMARY KEY,
     created_at timestamp(0) with time zone NOT NULL DEFAULT NOW(),
     movie_id integer NOT NULL REFERENCES movies(id) ON DELETE CASCADE,
@@ -35,10 +35,10 @@ CREATE TABLE IF NOT EXISTS seats (
     seat_number integer NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS reservation (
+CREATE TABLE IF NOT EXISTS reservations (
     id SERIAL PRIMARY KEY,
     created_at timestamp(0) with time zone NOT NULL DEFAULT NOW(),
-    showtime_id integer NOT NULL REFERENCES showtime(id) ON DELETE CASCADE,
+    showtime_id integer NOT NULL REFERENCES showtimes(id) ON DELETE CASCADE,
     seat_id integer NOT NULL REFERENCES seats(id) ON DELETE CASCADE,
     user_id integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     status VARCHAR(255)

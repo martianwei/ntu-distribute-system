@@ -17,7 +17,7 @@ VALUES
 
 
 
-INSERT INTO showtime (created_at, movie_id, cinema_id, movie_start_time)
+INSERT INTO showtimes (created_at, movie_id, cinema_id, movie_start_time)
 VALUES
     ('2023-05-15 10:00:00+00:00', 1, 1, '2023-06-20 13:00:00+00:00'),
     ('2023-05-15 10:00:00+00:00', 2, 2, '2023-06-20 14:00:00+00:00'),
