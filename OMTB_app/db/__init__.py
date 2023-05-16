@@ -1,3 +1,1 @@
-from db.postgresql import PostgresqlConnector
-
-postgresqlClient = PostgresqlConnector()
+from .postgresql import session
