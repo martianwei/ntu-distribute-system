@@ -1,13 +1,20 @@
 from celery import Celery
-from db.postgresql import PostgresqlConnector
 from configs import configs
-
-postgresqlClient = PostgresqlConnector()
+from kombu import Queue, Exchange
 
 celery_app = Celery(configs.APP_NAME,
-                    include=['webscaner.tasks'])
+                    include=['reservation_app.tasks'])
+
+QUEUE_NAME = 'movie_reservation_queue'
+
+queue = (
+    Queue(name=QUEUE_NAME, exchange=Exchange(
+        'default', type='direct')),
+)
+
 
 celery_app.conf.update(
+    task_queues=queue,
     timezone='Asia/Taipei',  # 设置时区
     enable_utc=False,  # 默认为true，UTC时区
     broker_url=configs.CELERY_BROKER_URL,  # broker，注意rabbitMQ的VHOST要给你使用的用户加权限

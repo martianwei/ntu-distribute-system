@@ -1,13 +1,19 @@
-.PHONY: up down
+.PHONY: migration-up migration-down migration-init run-middleware build-middleware
 
-up:
+migration-up:
 	alembic upgrade head
 
-down:
+migration-down:
 	alembic downgrade base
 
-install:
-	pip install -r requirements.txt
+migration-init:
+	alembic init migrations
 
-init:
-	alembic init alembic
+run-middleware:
+	docker compose -f dokerk-compose-middleware up -d
+
+build-middleware:
+	docker compose -f dokerk-compose-middleware build
+
+run-OMTB_app:
+	uvicorn OMTB_app.main:app --host 0.0.0.0 --port 8888
