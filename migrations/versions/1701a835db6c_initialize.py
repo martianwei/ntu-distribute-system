@@ -45,7 +45,7 @@ def upgrade():
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('created_at', sa.TIMESTAMP(timezone=True),
                   nullable=False, server_default=sa.text('(now())')),
-        sa.Column('title', sa.String(length=64), nullable=False),
+        sa.Column('name', sa.String(length=64), nullable=False),
         sa.PrimaryKeyConstraint('id')
     )
 
@@ -89,8 +89,7 @@ def upgrade():
         'reservation_seat',
         sa.Column('reservation_id', sa.Integer(), nullable=False),
         sa.Column('seat_id', sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(['reservation_id'], [
-                                'reservations.id'], ondelete='CASCADE'),
+        sa.ForeignKeyConstraint(['reservation_id'], ['reservations.id'], ondelete='CASCADE'),
         sa.ForeignKeyConstraint(['seat_id'], ['seats.id'], ondelete='CASCADE'),
         sa.PrimaryKeyConstraint('reservation_id', 'seat_id')
     )

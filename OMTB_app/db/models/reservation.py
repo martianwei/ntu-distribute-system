@@ -4,6 +4,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from db.models.user import User
 from db.models.showtime import Showtime
 from db.models.seat import Seat
+from db import session
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 
 Base = declarative_base()
 
@@ -29,3 +34,19 @@ class Reservation(Base):
     status = Column(String(255))
 
     seats = relationship(Seat, secondary=reservation_seat_table)
+
+
+def check_seats_can_reserved(showtime_id: int, want_seats: list[int]) -> bool:
+    logging.info("==========check_seats_can_reserved==========")
+    reservations = session.query(Reservation).filter_by(
+        showtime_id=showtime_id, status="SUCCESS").all()
+    reserved_seats_id = []
+    for r in reservations:
+        reserved_seats_id.extend([seat.id for seat in r.seats])
+    print(f"reserved_seats_id: {reserved_seats_id}")
+    check = True
+    for seat_id in want_seats:
+        if seat_id in reserved_seats_id:
+            check = False
+            break
+    return check

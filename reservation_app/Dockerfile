@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-ADD ./reservation_worker_app .
+ADD . .
 
 
 RUN apt-get update -y 
@@ -16,4 +16,4 @@ RUN apt-get update -y
 RUN pip3 install -r requirements.txt
 
 
-ENTRYPOINT [ "celery", "-A", "reservation", "worker", "-B", "-l", "info" ]
+ENTRYPOINT [ "celery", "-A", "reservation_app", "worker" ]

@@ -2,11 +2,11 @@ from http import HTTPStatus
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from celery import Celery
-from pydatic import BaseModel
-from exception import LockAcquisitionError
+from pydantic import BaseModel
+from exception import LockAcquisitionError, SeatHasReservedError
 from configs import configs
 from db import session
-from db.models.reservation import Reservation
+from db.models.reservation import Reservation, check_seats_can_reserved
 from lock.redis import get_lock, release_locks
 celery_app = Celery(configs.APP_NAME)
 celery_app.conf.update(
@@ -28,9 +28,14 @@ class reservationRequest(BaseModel):
 async def reserve(request: reservationRequest):
     locks = []
     try:
+        can_reserve = check_seats_can_reserved(
+            request.showtime_id, request.seat_ids)
+        if not can_reserve:
+            raise SeatHasReservedError(
+                f"Seat has been reserved for showtime ID: {request.showtime_id}")
         # Acquire locks for each seat ID
         for seat_id in request.seat_ids:
-            lock_key = f"showtime_id:{request.showtime_id} seat_id:{seat_id}"
+            lock_key = f"showtime_id={request.showtime_id} seat_id={seat_id}"
             lock = get_lock(lock_key)
             if lock is None:
                 raise LockAcquisitionError(
@@ -40,8 +45,15 @@ async def reserve(request: reservationRequest):
     except LockAcquisitionError:
         # Release all acquired locks if any lock acquisition fails
         release_locks(locks)
-        raise
-
+        return JSONResponse(
+            content={"msg": "the seat have been lock!!!"},
+            status_code=HTTPStatus.BAD_REQUEST,
+        )
+    except SeatHasReservedError:
+        return JSONResponse(
+            content={"msg": "the seat have been reserved!!!"},
+            status_code=HTTPStatus.BAD_REQUEST,
+        )
     # Create a new reservation instance
     reservation = Reservation(
         showtime_id=request.showtime_id,
@@ -55,12 +67,13 @@ async def reserve(request: reservationRequest):
     # Commit the session to persist the changes to the database
     session.commit()
 
-    task_id = celery_app.send_task(
-        "reservation.task",
+    task = celery_app.send_task(
+        "reservation_app.tasks.reservation",
+        queue="movie_reservation_queue",
         args=[reservation.id, request.seat_ids],
     )
 
     return JSONResponse(
-        content={"msg": "reserve success", "taskid": task_id},
+        content={"msg": "reserve request success", "taskid": str(task.id)},
         status_code=HTTPStatus.OK,
     )

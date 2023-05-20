@@ -39,7 +39,7 @@ def upgrade():
     # Insert mock data into cinemas table
     op.execute(
         """
-        INSERT INTO cinemas (title)
+        INSERT INTO cinemas (name)
         VALUES ('Cinema A'),
                ('Cinema B')
         """
