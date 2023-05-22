@@ -8,6 +8,8 @@ from configs import configs
 from db import session
 from db.models.reservation import Reservation, check_seats_can_reserved
 from db.models.seat import Seat
+from db.models.movie import Movie
+from db.models.showtime import Showtime
 from lock.redis import get_lock, release_locks
 import logging
 
@@ -86,3 +88,37 @@ async def reserve(request: reservationRequest):
         content={"msg": "reserve request success", "taskid": str(task.id)},
         status_code=HTTPStatus.OK,
     )
+
+# @router.get("/main_page/movies", tags=["main_page"])
+# async def get_movies():
+#     movies = session.query(Movie).all()
+#     for movie in movies:
+#         print(movie)
+
+
+@router.get("/main_page/showtimes", tags=["main_page"])
+async def get_showtimes(movie_id: int = None, date: str = None):
+    showtimes = session.query(Showtime).all() if movie_id is None \
+        else session.query(Showtime).filter_by(movie_id=movie_id).all()
+    result_dict = {}
+
+    for showtime in showtimes:
+        date = str(showtime.movie_start_time.month) + \
+            '/' + str(showtime.movie_start_time.day)
+
+        # prettier format
+        hour = '0' + str(showtime.movie_start_time.hour) if int(
+            str(showtime.movie_start_time.hour)) < 10 else str(showtime.movie_start_time.hour)
+        minute = '0' + str(showtime.movie_start_time.minute) if int(str(
+            showtime.movie_start_time.minute)) < 10 else str(showtime.movie_start_time.minute)
+        time = hour + ':' + minute
+
+        if date not in result_dict:
+            result_dict[date] = [time]
+        else:
+            result_dict[date].append(time)
+
+    return result_dict
+
+# @router.get("/main_page/showtimes", tags=["main_page"])
+# async def get_showtimes(movie_id: int = None, date: str = None):
