@@ -15,8 +15,8 @@ def reservation(*args):
     # check_parameter(args[1], "seat_ids", list[int])
     reservation_id = args[0]
     seat_ids = args[1]
-    logging.info(f"1111 reservation_id: {reservation_id}")
-    logging.info(f"1111 seat_ids: {seat_ids}")
+    logging.info(f"reservation_id: {reservation_id}")
+    logging.info(f"seat_ids: {seat_ids}")
     try:
         # Retrieve the reservation instance
         reservation = session.query(Reservation).filter_by(

@@ -7,7 +7,11 @@ from exception import LockAcquisitionError, SeatHasReservedError
 from configs import configs
 from db import session
 from db.models.reservation import Reservation, check_seats_can_reserved
+from db.models.seat import Seat
 from lock.redis import get_lock, release_locks
+import logging
+
+logging.basicConfig(level=logging.INFO)
 celery_app = Celery(configs.APP_NAME)
 celery_app.conf.update(
     broker_url=configs.CELERY_BROKER_URL,  # broker，注意rabbitMQ的VHOST要给你使用的用户加权限
@@ -21,21 +25,26 @@ router = APIRouter()
 class reservationRequest(BaseModel):
     user_id: str
     showtime_id: str
-    seat_ids: list[int]
+    cinema_id: int
+    seat_numbers: list[int]
 
 
 @router.post("/main_page/reserve", tags=["main_page"])
 async def reserve(request: reservationRequest):
+    seats = session.query(Seat).filter(
+        Seat.cinema_id == request.cinema_id, Seat.seat_number.in_(request.seat_numbers)).all()
+    seat_ids = [seat.id for seat in seats]
+    logging.info(f"seat_ids: {seat_ids}")
     locks = []
     try:
         can_reserve = check_seats_can_reserved(
-            request.showtime_id, request.seat_ids)
+            request.showtime_id, seat_ids)
         if not can_reserve:
             raise SeatHasReservedError(
                 f"Seat has been reserved for showtime ID: {request.showtime_id}")
         # Acquire locks for each seat ID
-        for seat_id in request.seat_ids:
-            lock_key = f"showtime_id={request.showtime_id} seat_id={seat_id}"
+        for seat_id in seat_ids:
+            lock_key = f"showtime_id={request.showtime_id} seat_num={seat_id}"
             lock = get_lock(lock_key)
             if lock is None:
                 raise LockAcquisitionError(
@@ -70,7 +79,7 @@ async def reserve(request: reservationRequest):
     task = celery_app.send_task(
         "reservation_app.tasks.reservation",
         queue="movie_reservation_queue",
-        args=[reservation.id, request.seat_ids],
+        args=[reservation.id, seat_ids],
     )
 
     return JSONResponse(

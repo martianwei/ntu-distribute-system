@@ -10,7 +10,7 @@ migration-init:
 	alembic init migrations
 
 run-middleware:
-	docker compose -f dokerk-compose-middleware up -d
+	docker compose -f docker-compose-middleware up -d
 
 build-middleware:
 	docker compose -f dokerk-compose-middleware build
