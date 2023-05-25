@@ -1,21 +1,18 @@
 from fastapi import APIRouter
 from db import session
-from db.models.user import create_user, User
+from db.models.reservation import Reservation
 router = APIRouter()
 
+# TODO
+@router.get("/users/reservation", tags=["users"])
+async def get_reservation(user_id: int) -> dict:
+    reservations = session.query(Reservation).filter_by(user_id=user_id).all()
+    return {
+        "reservations": [
+            {
+                "title": "aqua",
+                "movie_starttime": "some datetime",
+            }  for reservation in reservations
+        ]
+    }
 
-@router.get("/users/sign_in", tags=["users"])
-async def sign_in():
-    return {"message": "sign_in"}
-
-
-@router.get("/users/sign_up", tags=["users"])
-async def sign_up():
-    user = User(
-        username="test",
-        password="testpassword",
-        email="test@example.com",
-        activated=True,
-    )
-    create_user(session, user)
-    return {"message": "sign_up"}

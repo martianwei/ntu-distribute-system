@@ -89,36 +89,51 @@ async def reserve(request: reservationRequest):
         status_code=HTTPStatus.OK,
     )
 
-# @router.get("/main_page/movies", tags=["main_page"])
-# async def get_movies():
-#     movies = session.query(Movie).all()
-#     for movie in movies:
-#         print(movie)
+
+@router.get("/main_page/movies", tags=["main_page"])
+async def get_movies(movie_id: int = None) -> dict:
+    if movie_id is None:
+        movies = session.query(Movie).all()
+        return {
+            "movies": [
+                {
+                    "movie_id": movie.id,
+                    "title": movie.title,
+                    # "pic_url": movie.pic_url,
+                } for movie in movies
+            ]
+        }
+    else:
+        movies = session.query(Movie).filter_by(id=movie_id).all()
+        if len(movies) == 0:
+            return {"Error": "No such movie"}
+        
+        movie = movies[0]
+        return {
+            "title": movie.title,
+            # "description": movie.description,
+            "duration": movie.duration,
+            "category": movie.category,
+            # "pic_url": movie.pic_url,
+        }
 
 
 @router.get("/main_page/showtimes", tags=["main_page"])
-async def get_showtimes(movie_id: int = None, date: str = None):
-    showtimes = session.query(Showtime).all() if movie_id is None \
-        else session.query(Showtime).filter_by(movie_id=movie_id).all()
-    result_dict = {}
+async def get_showtimes(movie_id: int) -> dict:
+    showtimes = session.query(Showtime).filter_by(movie_id=movie_id).all()
+    return {
+        "showtimes": [
+            {
+                "showtime_id": showtime.id,
+                "movie_starttime": showtime.movie_start_time,
+            }  for showtime in showtimes
+        ]
+    }
 
-    for showtime in showtimes:
-        date = str(showtime.movie_start_time.month) + \
-            '/' + str(showtime.movie_start_time.day)
-
-        # prettier format
-        hour = '0' + str(showtime.movie_start_time.hour) if int(
-            str(showtime.movie_start_time.hour)) < 10 else str(showtime.movie_start_time.hour)
-        minute = '0' + str(showtime.movie_start_time.minute) if int(str(
-            showtime.movie_start_time.minute)) < 10 else str(showtime.movie_start_time.minute)
-        time = hour + ':' + minute
-
-        if date not in result_dict:
-            result_dict[date] = [time]
-        else:
-            result_dict[date].append(time)
-
-    return result_dict
-
-# @router.get("/main_page/showtimes", tags=["main_page"])
-# async def get_showtimes(movie_id: int = None, date: str = None):
+# TODO
+@router.get("/main_page/reserved_seats", tags=["main_page"])
+async def get_showtimes(showtime_id: int) -> dict:
+    return {
+        "cinema_id": 1,
+        "reserved_seat_numbers": [1, 2, 3]
+    }
