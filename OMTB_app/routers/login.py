@@ -6,9 +6,11 @@ import jwt
 
 router = APIRouter()
 
+
 @router.get("/login", response_class=RedirectResponse)
 async def login():
     return authorization_url
+
 
 @router.get("/callback")
 async def callback(request: Request):
@@ -18,13 +20,12 @@ async def callback(request: Request):
     data = session.get('https://www.googleapis.com/userinfo/v2/me').json()
 
     # return token when authorized
-    key = configs.SECRET_KEY
-    token = jwt.encode({"user_id": "payload"}, key, algorithm="HS256")
+    # key = configs.SECRET_KEY
+    # token = jwt.encode({"email": f"{data.email}"}, key, algorithm="HS256")
 
-
-    response = JSONResponse(content=data)
-    response.headers["Authorization"] = f"Bearer {token}"
+    # response = JSONResponse(content=data)
+    # response.headers["Authorization"] = f"Bearer {token}"
     # Verify token
     # info = jwt.decode(encoded, key, algorithms="HS256")
 
-    return response
+    return data

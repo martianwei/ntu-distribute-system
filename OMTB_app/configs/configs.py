@@ -12,7 +12,4 @@ CELERY_RESULT_BACKEND: str = os.getenv("CELERY_RESULT_BACKEND")
 REDIS_LOCK_URL: str = os.getenv("REDIS_LOCK_URL")
 
 
-GOOGLE_CLIENT_ID: str = os.getenv("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET: str = os.getenv("GOOGLE_CLIENT_SECRET")
 SERVER_PORT: str = os.getenv("SERVER_PORT")
-SECRET_KEY: str = os.getenv("SECRET_KEY")
