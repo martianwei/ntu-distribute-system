@@ -38,6 +38,8 @@ def upgrade():
         sa.Column('title', sa.String(length=64), nullable=False),
         sa.Column('duration', sa.Time(), nullable=True),
         sa.Column('category', sa.String(length=64), nullable=False),
+        sa.Column('description', sa.String(length=255), nullable=True),
+        sa.Column('picture_url', sa.String(length=255), nullable=False),
         sa.PrimaryKeyConstraint('id')
     )
     op.create_table(
@@ -89,7 +91,8 @@ def upgrade():
         'reservation_seat',
         sa.Column('reservation_id', sa.Integer(), nullable=False),
         sa.Column('seat_id', sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(['reservation_id'], ['reservations.id'], ondelete='CASCADE'),
+        sa.ForeignKeyConstraint(['reservation_id'], [
+                                'reservations.id'], ondelete='CASCADE'),
         sa.ForeignKeyConstraint(['seat_id'], ['seats.id'], ondelete='CASCADE'),
         sa.PrimaryKeyConstraint('reservation_id', 'seat_id')
     )

@@ -30,9 +30,9 @@ def upgrade():
     # Insert mock data into movies table
     op.execute(
         """
-        INSERT INTO movies (title, duration, category)
-        VALUES ('Movie 1', '02:30:00', 'Action'),
-               ('Movie 2', '01:45:00', 'Drama')
+        INSERT INTO movies (title, duration, category, description, picture_url)
+        VALUES ('Movie 1', '02:30:00', 'Action', 'Movie 1 description', 'https://miro.medium.com/v2/resize:fit:1260/format:webp/1*MBb7iatu9etCcQQGxUXpbg.jpeg'),
+               ('Movie 2', '01:45:00', 'Drama', 'Movie 2 description', 'https://3.bp.blogspot.com/-L0I2Milxdtc/W3P87r_qCtI/AAAAAAAAH68/iY0dAZpXlbEmurbprcnTACoFIbFlfQiCQCKgBGAs/s1600/cyan_bg_.jpg')
         """
     )
 
