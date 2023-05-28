@@ -1,0 +1,63 @@
+version: "3.7"
+services:
+  progresql:
+    image: postgres:latest
+    container_name: postgresql
+    networks:
+      - default
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=OMTB
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    networks:
+      - default
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=P@ssw0rd
+  redis:
+    image: redis
+    container_name: redisdb
+    networks:
+      - default
+    restart: always
+    ports:
+      - 6379:6379
+  flower:
+    image: mher/flower
+    container_name: flower
+    networks:
+      - default
+    restart: always
+    environment:
+      - CELERY_BROKER_URL=amqp://admin:P@ssw0rd@rabbitmq:5672/
+      - CELERY_RESULT_BACKEND=redis://redisdb:6379/0
+      - FLOWER_PORT=5555
+    ports:
+      - 5555:5555
+  worker:
+    image: omtb/worker
+    container_name: worker
+    build:
+      context: .
+      dockerfile: ./reservation_app/Dockerfile
+    networks:
+      - default
+    restart: always
+    env_file:
+      - ./env/worker.env
+    depends_on:
+      - rabbitmq
+      - redis
+      - progresql
+
+# Using default network 
