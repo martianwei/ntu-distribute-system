@@ -32,15 +32,14 @@ def upgrade():
 
     op.create_table(
         'movies',
-        sa.Column('id', sa.Integer(), nullable=False),
+        sa.Column('id', sa.Integer(), nullable=False, primary_key=True),
         sa.Column('created_at', sa.TIMESTAMP(timezone=True),
                   nullable=False, server_default=sa.text('(now())')),
         sa.Column('title', sa.String(length=64), nullable=False),
-        sa.Column('duration', sa.Time(), nullable=True),
+        sa.Column('duration', sa.Time(), nullable=False),
         sa.Column('category', sa.String(length=64), nullable=False),
         sa.Column('description', sa.String(length=255), nullable=True),
-        sa.Column('picture_url', sa.String(length=255), nullable=False),
-        sa.PrimaryKeyConstraint('id')
+        sa.Column('picture_url', sa.String(length=255), nullable=True)
     )
     op.create_table(
         'cinemas',

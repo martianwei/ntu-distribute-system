@@ -2,8 +2,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse, JSONResponse
 from oauth.google import flow, authorization_url
 from configs import configs
-from db import session
-from db.models.user import create_user, User
+from db.models.user import create_user, UserSchema, get_user_by_username
 
 router = APIRouter()
 
@@ -13,11 +12,14 @@ router = APIRouter()
 async def login():
     return authorization_url
 
+
 @router.post("/login", response_class=RedirectResponse)
 async def login():
     return authorization_url
 
 # Test for OAuth session
+
+
 @router.get("/secret")
 async def secret():
     try:
@@ -31,28 +33,27 @@ async def secret():
 async def callback(request: Request):
     try:
         authorization_response = request.url
-        token = flow.fetch_token(authorization_response=str(authorization_response))
+        token = flow.fetch_token(
+            authorization_response=str(authorization_response))
         # print(token)
         auth_session = flow.authorized_session()
-        data = auth_session.get('https://www.googleapis.com/userinfo/v2/me').json()
+        data = auth_session.get(
+            'https://www.googleapis.com/userinfo/v2/me').json()
+        print(data)
+        user = get_user_by_username(data['id'])
 
-        existing_user = session.query(User).filter(
-            User.username == data['id']
-        ).all()
-        
-        # No such user, create one
-        if len(existing_user) == 0:     
-            user = User(
-                username=data['id'],
+        if user is None:
+            print("Creating new user")
+            new_user = UserSchema(
+                username=str(data['id']),
                 password="testpassword",
                 email=data['email'],
                 activated=True,
             )
-            create_user(session, user)
-            existing_user = session.query(User).filter(
-                User.username == data['id']
-            ).all()        
-        return { "user_id": existing_user[0].id}
-    
+            user = create_user(new_user)
+
+        return {
+            "user_id": user.id
+        }
     except:
         return "Auth failed!"
