@@ -8,19 +8,19 @@ router = APIRouter()
 
 
 # for testing in browser
-@router.get("/login", response_class=RedirectResponse)
+@router.get("/login", response_class=RedirectResponse, tags=["login"])
 async def login():
     return authorization_url
 
 
-@router.post("/login", response_class=RedirectResponse)
+@router.post("/login", response_class=RedirectResponse, tags=["login"])
 async def login():
     return authorization_url
 
 # Test for OAuth session
 
 
-@router.get("/secret")
+@router.get("/secret", tags=["login"])
 async def secret():
     try:
         auth_session = flow.authorized_session()
@@ -29,7 +29,7 @@ async def secret():
         return "Don't peak my secret"
 
 
-@router.get("/callback")
+@router.get("/callback", tags=["login"])
 async def callback(request: Request):
     try:
         authorization_response = request.url
