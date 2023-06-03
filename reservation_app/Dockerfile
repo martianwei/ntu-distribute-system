@@ -8,12 +8,10 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-ADD . .
-
+ADD ./reservation_app ./reservation_app
 
 RUN apt-get update -y 
 
-RUN pip3 install -r requirements.txt
-
+RUN pip3 install -r reservation_app/requirements.txt
 
 ENTRYPOINT [ "celery", "-A", "reservation_app", "worker" ]

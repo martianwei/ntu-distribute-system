@@ -12,7 +12,6 @@ queue = (
         'default', type='direct')),
 )
 
-
 celery_app.conf.update(
     task_queues=queue,
     timezone='Asia/Taipei',  # 设置时区

@@ -1,4 +1,4 @@
-.PHONY: migration-up migration-down migration-init run-middleware build-middleware
+.PHONY: migration-up migration-down migration-init middleware-up middleware-down OMTB_app-run
 
 migration-up:
 	alembic upgrade head
@@ -9,11 +9,11 @@ migration-down:
 migration-init:
 	alembic init migrations
 
-run-middleware:
-	docker compose -f docker-compose-middleware up -d
+middleware-up:
+	docker compose -f docker-compose-debug.yml -f docker-compose-middleware.yml up -d
 
-build-middleware:
-	docker compose -f dokerk-compose-middleware build
+middleware-down: 
+	docker compose -f docker-compose-debug.yml -f docker-compose-middleware.yml down
 
-run-OMTB_app:
-	uvicorn OMTB_app.main:app --host 0.0.0.0 --port 8888
+OMTB_app-run:
+	cd OMTB_app && uvicorn main:app --host 0.0.0.0 --port 8888
