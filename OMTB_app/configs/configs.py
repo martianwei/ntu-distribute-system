@@ -13,3 +13,4 @@ REDIS_LOCK_URL: str = os.getenv("REDIS_LOCK_URL")
 
 
 SERVER_PORT: str = os.getenv("SERVER_PORT")
+CLIENT_ENDPOINT: str = os.getenv("CLIENT_ENDPOINT")
