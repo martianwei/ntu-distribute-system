@@ -56,7 +56,7 @@ def send_reservation_task(reservation_id: int, seat_ids: List[int]):
     )
 
 
-@router.post("/reservations", tags=["reservation"])
+@router.post("/reservation", tags=["reservation"])
 async def reserve(request: reservationRequest):
     seats = session.query(Seat).filter(
         Seat.cinema_id == request.cinema_id, Seat.seat_number.in_(request.seat_numbers)).all()

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from routers import users, login, main_page
-import os 
+from routers import users, login
+import os
 from configs import configs
 from fastapi.middleware.cors import CORSMiddleware
 from routers import user, login, reservation, movie, showtime, seat
@@ -38,6 +38,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/")
 async def root() -> dict:
