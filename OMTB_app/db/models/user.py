@@ -1,6 +1,5 @@
 from datetime import datetime
 import sqlalchemy as sa
-from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from typing import Optional
 from pydantic import BaseModel
@@ -33,8 +32,6 @@ class User(Base):
     email = sa.Column(sa.String(255), unique=True, nullable=False)
     password = sa.Column(sa.String(64), default=None)
     activated = sa.Column(sa.Boolean, nullable=False)
-
-    # reservations = relationship("Reservation", backref="user")
 
 
 def create_user(user: UserSchema) -> UserSchema:
