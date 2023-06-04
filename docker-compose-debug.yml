@@ -3,3 +3,6 @@ services:
   worker:
     volumes:
       - ./reservation_app:/app/reservation_app
+  OMTB-app:
+    volumes:
+      - ./OMTB_app:/app

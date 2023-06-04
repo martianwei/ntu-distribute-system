@@ -17,6 +17,3 @@ middleware-down:
 
 OMTB_app-run:
 	cd OMTB_app && uvicorn main:app --host 0.0.0.0 --port 8888
-
-docker-up:
-	docker compose -f docker-compose-debug.yml up -d

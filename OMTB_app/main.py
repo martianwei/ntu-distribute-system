@@ -1,9 +1,8 @@
 from fastapi import FastAPI
-from routers import users, login
 import os
 from configs import configs
 from fastapi.middleware.cors import CORSMiddleware
-from routers import user, login, reservation, movie, showtime, seat
+from routers import user, reservation, movie, showtime, seat
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
@@ -21,7 +20,6 @@ app.add_middleware(
 
 
 app.include_router(user.router)
-app.include_router(login.router)
 app.include_router(reservation.router)
 app.include_router(movie.router)
 app.include_router(showtime.router)
