@@ -59,5 +59,22 @@ services:
       - rabbitmq
       - redis
       - progresql
+  OMTB-app:
+    image: omtb/app
+    container_name: OMTB-app
+    build:
+      context: .
+      dockerfile: ./OMTB_app/Dockerfile
+    networks:
+      - default
+    ports:
+      - 8888:8888
+    restart: always
+    env_file:
+      - ./env/OMTB.env
+    depends_on:
+      - rabbitmq
+      - redis
+      - progresql
 
 # Using default network 

@@ -4,9 +4,8 @@ WORKDIR /app
 
 ADD . .
 
-RUN apt-get update -y 
+RUN apt-get update -y && \
+    pip3 install -r requirements.txt
 
-RUN pip3 install -r requirements.txt
-
-ENTRYPOINT [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8888"]
+CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8888"]
 
