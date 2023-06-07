@@ -38,7 +38,7 @@ def upgrade():
         sa.Column('title', sa.String(length=64), nullable=False),
         sa.Column('duration', sa.Time(), nullable=False),
         sa.Column('category', sa.String(length=64), nullable=False),
-        sa.Column('description', sa.String(length=255), nullable=True),
+        sa.Column('description', sa.String(length=2000), nullable=True),
         sa.Column('picture_url', sa.String(length=255), nullable=True)
     )
     op.create_table(
