@@ -23,7 +23,7 @@ services:
       - 15672:15672
     environment:
       - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=P@ssw0rd
+      - RABBITMQ_DEFAULT_PASS=adminP@ssw0rd
   redis:
     image: redis
     container_name: redisdb
@@ -39,7 +39,7 @@ services:
       - default
     restart: always
     environment:
-      - CELERY_BROKER_URL=amqp://admin:P@ssw0rd@rabbitmq:5672/
+      - CELERY_BROKER_URL=amqp://admin:adminP@ssw0rd@rabbitmq:5672/
       - CELERY_RESULT_BACKEND=redis://redisdb:6379/0
       - FLOWER_PORT=5555
     ports:
@@ -71,7 +71,7 @@ services:
       - 8888:8888
     restart: always
     env_file:
-      - ./env/OMTB.env
+      - ./env/local.env
     depends_on:
       - rabbitmq
       - redis

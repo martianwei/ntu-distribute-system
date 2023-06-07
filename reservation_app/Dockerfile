@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-ADD ./reservation_app ./reservation_app
+ADD . ./reservation_app
 
 RUN apt-get update -y 
 

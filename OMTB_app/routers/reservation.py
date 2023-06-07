@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from exception import LockAcquisitionError, SeatHasReservedError
 from configs import configs
 from db import session
-from db.models.reservation import Reservation, check_seats_can_reserved, create_reservation
+from db.models.reservation import check_seats_can_reserved, create_reservation
 from db.models.seat import Seat
 from lock.redis import get_lock, release_locks
 import logging
