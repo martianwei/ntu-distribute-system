@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 import os
 from configs import configs
-from starlette.middleware.cors import CORSMiddleware
+# from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from routers import user, reservation, movie, showtime, seat
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
