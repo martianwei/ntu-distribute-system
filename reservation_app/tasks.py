@@ -10,9 +10,6 @@ import logging
     name="reservation_app.tasks.reservation",
 )  # 常駐等待
 def reservation(*args):
-    # check_parameter(args, "args", tuple)
-    # check_parameter(args[0], "reservation_id", int)
-    # check_parameter(args[1], "seat_ids", list[int])
     reservation_id = args[0]
     seat_ids = args[1]
     logging.info(f"reservation_id: {reservation_id}")

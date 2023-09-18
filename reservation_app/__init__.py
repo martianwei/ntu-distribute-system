@@ -11,8 +11,6 @@ queue = (
     Queue(name=QUEUE_NAME, exchange=Exchange(
         'default', type='direct')),
 )
-print("===========================================init================",
-      configs.CELERY_BROKER_URL)
 celery_app.conf.update(
     task_queues=queue,
     timezone='Asia/Taipei',  # 设置时区
@@ -25,4 +23,3 @@ celery_app.conf.update(
     worker_prefetch_multiplier=1,
     result_expires=3600,  # 任务结果过期时间
 )
-print("===================test=========", celery_app.conf.broker_url)

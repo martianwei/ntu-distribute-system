@@ -57,7 +57,7 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    db_url = "postgresql://postgres:admin@localhost/OMTB"
+    db_url = "postgresql://postgres:HpEg2X5tTWMD26r14ljk@omtb-db.cjy3f6ylhph6.us-east-1.rds.amazonaws.com/postgres"
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
