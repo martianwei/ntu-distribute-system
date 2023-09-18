@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  server:
+    build: 
+      context: ./server
+    environment:
+      - FLASK_APP=server.py
+      - FLASK_RUN_HOST=0.0.0.0 
+    volumes:
+      - ./data:/app/data
+    expose:
+      - 5000
+  client:
+    build:
+      context: ./client
+    depends_on:
+      - server
+
+# Using default network lab1_default      
